@@ -33,26 +33,34 @@ public class Program
         }
         */
 
+        // Mengambil semua data dari tabel "regions".
         //GetAllRegions();
 
+        // Menambahkan data baru ke dalam tabel "regions.
         //InsertRegion(8, "Banda Neira");
 
+        // Mengambil data dari tabel "regions" berdasarkan ID.
         /*int regionId = 8;
         GetRegionsById(regionId);*/
 
+        // Menghapus data dari tabel "regions" berdasarkan ID.
         /*int regionIdDelete = 9;
         DeleteRegion(regionIdDelete);*/
 
+        // Memperbarui data dalam tabel "regions".
         int regionIdUpdate = 7;
         string newRegionName = "Kuala Namu";
         UpdateRegion(regionIdUpdate, newRegionName);
     }
 
 
-    // GET ALL: Region
+    // Mengambil semua data dari tabel "regions".
     public static void GetAllRegions()
     {
+        // Menginisialisasi object koneksi SqlConnection
         using var connection = new SqlConnection(connectionString);
+
+        // Menginisialisasi object perintah SQL
         using var command = new SqlCommand();
 
         command.Connection = connection;
@@ -60,10 +68,11 @@ public class Program
 
         try
         {
-            connection.Open();
+            connection.Open(); // Membuka koneksi.
 
             using var reader = command.ExecuteReader();
 
+            // Memeriksa apakah ada baris hasil dari query.
             if (reader.HasRows)
                 while (reader.Read())
                 {
@@ -74,7 +83,7 @@ public class Program
                 Console.WriteLine("No rows found.");
 
             reader.Close();
-            connection.Close();
+            connection.Close(); // Menutup koneksi.
         }
         catch (Exception ex)
         {
@@ -82,10 +91,13 @@ public class Program
         }
     }
 
-    // GET BY ID: Region
+    // Mengambil data dari tabel "regions" berdasarkan ID.
     public static void GetRegionsById(int id)
     {
+        // Menginisialisasi object koneksi SqlConnection
         using var connection = new SqlConnection(connectionString);
+
+        // Menginisialisasi object perintah SQL
         using var command = new SqlCommand();
 
         command.Connection = connection;
@@ -99,9 +111,10 @@ public class Program
             pId.SqlDbType = SqlDbType.Int;
             command.Parameters.Add(pId);
 
-            connection.Open();
+            connection.Open(); // Membuka koneksi.
             using var reader = command.ExecuteReader();
 
+            // Memeriksa apakah ada baris hasil dari query.
             if (reader.HasRows)
                 while (reader.Read())
                 {
@@ -112,7 +125,7 @@ public class Program
                 Console.WriteLine("No rows found.");
 
             reader.Close();
-            connection.Close();
+            connection.Close(); // Menutup koneksi.
         }
         catch (Exception ex)
         {
@@ -121,10 +134,13 @@ public class Program
     }
 
 
-    // INSERT: Region
+    // Menambahkan data ke dalam tabel "regions".
     public static void InsertRegion(int id, string name)
     {
+        // Menginisialisasi object koneksi SqlConnection
         using var connection = new SqlConnection(connectionString);
+
+        // Menginisialisasi object perintah SQL
         using var command = new SqlCommand();
 
         command.Connection = connection;
@@ -144,16 +160,16 @@ public class Program
             pName.SqlDbType = SqlDbType.VarChar;
             command.Parameters.Add(pName);
 
-            connection.Open();
+            connection.Open(); // Membuka koneksi.
             using var transaction = connection.BeginTransaction();
             try
             {
-                command.Transaction = transaction;
+                command.Transaction = transaction; // Menetapkan object transaksi dengan object perintah SQL.
 
-                var result = command.ExecuteNonQuery();
+                var result = command.ExecuteNonQuery(); // Menjalankan perintah SQL dan menghitung berapa banyak baris data yang dipengaruhi oleh perintah tersebut.
 
                 transaction.Commit();
-                connection.Close();
+                connection.Close(); // Menutup koneksi.
 
                 switch (result)
                 {
@@ -167,7 +183,7 @@ public class Program
             }
             catch (Exception ex) 
             {
-                transaction.Rollback();
+                transaction.Rollback(); // Membatalkan transaksi yang sedang berlangsung dalam basis data.
                 Console.WriteLine($"Error: {ex.Message}");
             }
         }
@@ -177,10 +193,13 @@ public class Program
         }
     }
 
-    // UPDATE: Region
+    // Memperbarui data di tabel "regions" berdasarkan ID.
     public static void UpdateRegion(int id,  string name)
     {
+        // Menginisialisasi object koneksi SqlConnection
         using var connection = new SqlConnection(connectionString);
+
+        // Menginisialisasi object perintah SQL
         using var command = new SqlCommand();
 
         command.Connection = connection;
@@ -200,16 +219,16 @@ public class Program
             pName.SqlDbType = SqlDbType.VarChar;
             command.Parameters.Add(pName);
 
-            connection.Open();
+            connection.Open(); // Membuka koneksi.
             using var transaction = connection.BeginTransaction();
             try
             {
-                command.Transaction = transaction;
+                command.Transaction = transaction; // Menetapkan object transaksi dengan object perintah SQL.
 
-                var result = command.ExecuteNonQuery();
+                var result = command.ExecuteNonQuery(); // Menjalankan perintah SQL dan menghitung berapa banyak baris data yang dipengaruhi oleh perintah tersebut.
 
                 transaction.Commit();
-                connection.Close();
+                connection.Close(); // Menutup koneksi.
 
                 switch (result)
                 {
@@ -223,7 +242,7 @@ public class Program
             }
             catch (Exception ex)
             {
-                transaction.Rollback();
+                transaction.Rollback(); // Membatalkan transaksi yang sedang berlangsung dalam basis data.
                 Console.WriteLine($"Error: {ex.Message}");
             }
         }
@@ -233,10 +252,13 @@ public class Program
         }
     }
 
-    // DELETE: Region
+    // Menghapus data dari tabel "regions" berdasarkan ID.
     public static void DeleteRegion(int id)
     {
+        // Menginisialisasi object koneksi SqlConnection
         using var connection = new SqlConnection(connectionString);
+
+        // Menginisialisasi object perintah SQL
         using var command = new SqlCommand();
 
         command.Connection = connection;
@@ -250,16 +272,16 @@ public class Program
             pId.SqlDbType = SqlDbType.Int;
             command.Parameters.Add(pId);
 
-            connection.Open();
+            connection.Open(); // Membuka koneksi.
             using var transaction = connection.BeginTransaction();
             try
             {
-                command.Transaction = transaction;
+                command.Transaction = transaction; // Menetapkan object transaksi dengan object perintah SQL.
 
-                var result = command.ExecuteNonQuery();
+                var result = command.ExecuteNonQuery(); // Menjalankan perintah SQL dan menghitung berapa banyak baris data yang dipengaruhi oleh perintah tersebut.
 
                 transaction.Commit();
-                connection.Close();
+                connection.Close(); // Menutup koneksi.
 
                 switch (result)
                 {
@@ -273,7 +295,7 @@ public class Program
             }
             catch (Exception ex)
             {
-                transaction.Rollback();
+                transaction.Rollback(); // Membatalkan transaksi yang sedang berlangsung dalam basis data.
                 Console.WriteLine($"Error: {ex.Message}");
             }
         }
