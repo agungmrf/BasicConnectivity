@@ -86,14 +86,14 @@ public class Program
         command.Connection = connection;
         command.CommandText = "SELECT * FROM regions WHERE Id = @id";
 
-        var pId = new SqlParameter();
-        pId.ParameterName = "id";
-        pId.Value = id;
-        pId.SqlDbType = SqlDbType.Int;
-        command.Parameters.Add(pId);
-
         try
         {
+            var pId = new SqlParameter();
+            pId.ParameterName = "id";
+            pId.Value = id;
+            pId.SqlDbType = SqlDbType.Int;
+            command.Parameters.Add(pId);
+
             connection.Open();
             using var reader = command.ExecuteReader();
 
