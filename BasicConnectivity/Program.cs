@@ -40,11 +40,12 @@ public class Program
         /*int regionId = 8;
         GetRegionsById(regionId);*/
 
-        int regionIdDelete = 9;
-        DeleteRegion(regionIdDelete);
+        /*int regionIdDelete = 9;
+        DeleteRegion(regionIdDelete);*/
 
-
-
+        int regionIdUpdate = 7;
+        string newRegionName = "Kuala Namu";
+        UpdateRegion(regionIdUpdate, newRegionName);
     }
 
 
@@ -179,7 +180,57 @@ public class Program
     // UPDATE: Region
     public static void UpdateRegion(int id,  string name)
     {
+        using var connection = new SqlConnection(connectionString);
+        using var command = new SqlCommand();
 
+        command.Connection = connection;
+        command.CommandText = "UPDATE regions SET region_name = @region_name WHERE Id = @id";
+
+        try
+        {
+            var pId = new SqlParameter();
+            pId.ParameterName = "@id";
+            pId.Value = id;
+            pId.SqlDbType = SqlDbType.Int;
+            command.Parameters.Add(pId);
+
+            var pName = new SqlParameter();
+            pName.ParameterName = "@region_name";
+            pName.Value = name;
+            pName.SqlDbType = SqlDbType.VarChar;
+            command.Parameters.Add(pName);
+
+            connection.Open();
+            using var transaction = connection.BeginTransaction();
+            try
+            {
+                command.Transaction = transaction;
+
+                var result = command.ExecuteNonQuery();
+
+                transaction.Commit();
+                connection.Close();
+
+                switch (result)
+                {
+                    case >= 1:
+                        Console.WriteLine($"Update Success ID: {id} New Region Name: {name}");
+                        break;
+                    default:
+                        Console.WriteLine($"No record found with ID: { id}");
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 
     // DELETE: Region
