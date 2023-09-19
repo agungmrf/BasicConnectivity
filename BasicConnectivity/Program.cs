@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Xml.Linq;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace BasicConnectivity;
@@ -36,8 +37,11 @@ public class Program
 
         //InsertRegion(8, "Banda Neira");
 
-        int regionId = 8;
-        GetRegionsById(regionId);
+        /*int regionId = 8;
+        GetRegionsById(regionId);*/
+
+        int regionIdDelete = 9;
+        DeleteRegion(regionIdDelete);
 
 
 
@@ -181,6 +185,50 @@ public class Program
     // DELETE: Region
     public static void DeleteRegion(int id)
     {
+        using var connection = new SqlConnection(connectionString);
+        using var command = new SqlCommand();
 
+        command.Connection = connection;
+        command.CommandText = "DELETE FROM regions WHERE Id = @id";
+
+        try
+        {
+            var pId = new SqlParameter();
+            pId.ParameterName = "@id";
+            pId.Value = id;
+            pId.SqlDbType = SqlDbType.Int;
+            command.Parameters.Add(pId);
+
+            connection.Open();
+            using var transaction = connection.BeginTransaction();
+            try
+            {
+                command.Transaction = transaction;
+
+                var result = command.ExecuteNonQuery();
+
+                transaction.Commit();
+                connection.Close();
+
+                switch (result)
+                {
+                    case >= 1:
+                        Console.WriteLine($"Delete Success ID: {id}");
+                        break;
+                    default:
+                        Console.WriteLine($"No record found with ID: {id}");
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }
