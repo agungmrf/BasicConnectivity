@@ -13,8 +13,11 @@
                 Console.WriteLine("3. View Locations");
                 Console.WriteLine("4. View Jobs");
                 Console.WriteLine("5. View Employees");
-                Console.WriteLine("6. View Histories");
-                Console.WriteLine("7. Exit");
+                Console.WriteLine("6. View Departments");
+                Console.WriteLine("7. View Histories");
+                Console.WriteLine("8. Join Table Employees");
+                Console.WriteLine("9. Employees Summary");
+                Console.WriteLine("10. Exit");
                 Console.Write("Enter your choice: ");
                 var input = Console.ReadLine();
                 choice = Menu(input);
@@ -26,36 +29,117 @@
             switch (input)
             {
                 case "1":
+                    // Menampilkan daftar Region.
                     var region = new Region();
                     var regions = region.GetAll();
                     GeneralMenu.List(regions, "regions");
                     break;
                 case "2":
+                    // Menampilkan daftar Countries.
                     var country = new Countries();
                     var countries = country.GetAll();
                     GeneralMenu.List(countries, "countries");
                     break;
                 case "3":
+                    // Menampilkan daftar Locations.
                     var location = new Locations();
                     var locations = location.GetAll();
                     GeneralMenu.List(locations, "locations");
                     break;
                 case "4":
+                    // Menampilkan daftar Jobs.
                     var jobs = new Jobs();
                     var allJobs = jobs.GetAll();
                     GeneralMenu.List(allJobs, "jobs");
                     break;
                 case "5":
+                    // Menampilkan daftar Employees.
                     var employees = new Employees();
                     var allEmployees = employees.GetAll();
                     GeneralMenu.List(allEmployees, "employees");
                     break;
                 case "6":
+                    // Menampilkan daftar Histories.
                     var histories = new Histories();
                     var allHistories = histories.GetAll();
                     GeneralMenu.List(allHistories, "histories");
                     break;
                 case "7":
+                    // Menampilkan daftar Departments.
+                    var departments = new Departments();
+                    var allDepartments = departments.GetAll();
+                    GeneralMenu.List(allDepartments, "departments");
+                    break;
+                case "8" :
+                    // Membuat object-object untuk operasi JOIN.
+                    var employees1 = new Employees();
+                    var departments1 = new Departments();
+                    var locations1 = new Locations();
+                    var countries1 = new Countries();
+                    var region1 = new Region();
+
+                    // Mengambil semua data yang dibutuhkan dari berbagai tabel.
+                    var getEmployees = employees1.GetAll();
+                    var getDepartments = departments1.GetAll();
+                    var getLocations = locations1.GetAll();
+                    var getCountries = countries1.GetAll();
+                    var getRegion = region1.GetAll();
+
+                    // Melakukan operasi JOIN dan SELECT ke object EmployeesVM
+                    var resultJoin = (from e in getEmployees
+                        join d in getDepartments on e.DepartmentId equals d.Id
+                        join l in getLocations on d.LocationId equals l.Id
+                        join c in getCountries on l.CountryId equals c.Id
+                        join r in getRegion on c.RegionId equals r.Id
+                        select new EmployeesVM
+                        {
+                            Id = e.Id,
+                            Full_Name = e.FirstName + " " + e.LastName,
+                            Email = e.Email,
+                            Phone_Number = e.PhoneNumber,
+                            Salary = e.Salary,
+                            Department_Name = d.DepartmentName,
+                            Street_Address = l.StreetAddress,
+                            Country_Name = c.CountryName,
+                            Region_Name = r.Name
+                        }).ToList();
+                    
+                    // Menampilkan hasil ke layar.
+                    foreach (var item in resultJoin)
+                    {
+                        Console.WriteLine($"{item.Id} - {item.Full_Name} - {item.Email} - {item.Phone_Number} - {item.Salary} - {item.Department_Name} - {item.Street_Address} - {item.Country_Name} - {item.Region_Name}");
+                    }
+                    break;
+                case "9":
+                    // Membuat object-object untuk operasi JOIN dan GROUP BY.
+                    var employees2 = new Employees();
+                    var departments2 = new Departments();
+                    
+                    // Mengambil semua data yang dibutuhkan dari berbagai tabel.
+                    var getEmployees1 = employees2.GetAll();
+                    var getDepartments1 = departments2.GetAll();
+                    
+                    // Melakukan operasi JOIN, GROUP BY, dan SELECT ke object EmployeesSummaryVM.
+                    var resultJoin1 = (from e1 in getEmployees1 
+                        join d1 in getDepartments1 on e1.DepartmentId equals d1.Id
+                        group e1 by d1.DepartmentName into departmentGroup
+                        where departmentGroup.Count() > 3
+                        select new EmployeesSummaryVM
+                        {
+                            Department_Name = departmentGroup.Key,
+                            Total_Employee = departmentGroup.Count(),
+                            Min_Salary = departmentGroup.Min(e => e.Salary),
+                            Max_Salary = departmentGroup.Max(e => e.Salary),
+                            Average_Salary = (decimal)departmentGroup.Average(e => e.Salary)
+                        }).ToList();
+                    
+                    // Menampilkan hasil ke layar.
+                    foreach (var item in resultJoin1)
+                    {
+                        Console.WriteLine($"Department Name: {item.Department_Name} - Total Employees: {item.Total_Employee} - Min Salary: {item.Min_Salary} - Max Salary: {item.Max_Salary} - Average Salary: {item.Average_Salary}");
+                    }
+                    break;
+                case "10":
                     return false;
                 default:
                     Console.WriteLine("Invalid choice");
