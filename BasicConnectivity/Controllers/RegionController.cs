@@ -33,27 +33,57 @@ public class RegionController
 
     public void Insert()
     {
-        var input = "";
+        string input = "";
         var isTrue = true;
         while (isTrue)
         {
             try
             {
                 input = _regionView.InsertInput();
+                if (string.IsNullOrEmpty(input))
+                {
+                    Console.WriteLine("Region name cannot be empty");
+                    continue;
+                }
                 isTrue = false;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine(e.Message);
             }
         }
-
-        var results = _region.Insert(new Region
-        {
+        
+        var result = _region.Insert(new Region {
             Id = 0,
             Name = input
         });
+        
+        _regionView.Transaction(result);
+    }
 
-        _regionView.Transaction(results);
+    public void Update()
+    {
+        var region = new Region();
+        var isTrue = true;
+        while (isTrue)
+        {
+            try
+            {
+                region = _regionView.UpdateRegion();
+                if (string.IsNullOrEmpty(region.Name))
+                {
+                    Console.WriteLine("Region name cannot be empty");
+                    continue;
+                }
+                isTrue = false;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+        
+        var result = _region.Update(region.Id, region.Name);
+        _regionView.Transaction(result);
     }
 }

@@ -169,7 +169,7 @@ namespace BasicConnectivity
                 Console.WriteLine("3. Update regions");
                 Console.WriteLine("4. Delete regions");
                 Console.WriteLine("10. Back");
-                Console.WriteLine("Enter your choice: ");
+                Console.Write("Enter your choice: ");
                 var input1 = Console.ReadLine();
                 switch (input1)
                 {
@@ -178,6 +178,9 @@ namespace BasicConnectivity
                         break;
                     case "2":
                         regionController.Insert();
+                        break;
+                    case "3":
+                        regionController.Update();
                         break;
                     case "10":
                         isLoop = false;
