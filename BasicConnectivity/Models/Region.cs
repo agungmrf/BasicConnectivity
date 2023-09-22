@@ -107,7 +107,7 @@ public class Region
     }
     
     // Menambahkan data ke dalam tabel "regions".
-    public string Insert(string name)
+    public string Insert(Region region)
     {
         using var connection = Provider.GetConnection();
         using var command = Provider.GetCommand();
@@ -117,7 +117,7 @@ public class Region
 
         try
         {
-            command.Parameters.Add(new SqlParameter("@name", name));
+            command.Parameters.Add(new SqlParameter("@name", region.Name));
 
             connection.Open(); // Membuka koneksi.
             using var transaction = connection.BeginTransaction();
