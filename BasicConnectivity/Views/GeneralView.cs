@@ -1,4 +1,4 @@
-namespace BasicConnectivity;
+namespace BasicConnectivity.Views;
 
 public class GeneralView
 {
@@ -8,7 +8,6 @@ public class GeneralView
     {
         Console.WriteLine($"List of {title}");
         Console.WriteLine("---------------");
-        // Mengulang melalui setiap item dalam daftar.
         foreach (var item in items)
         {
             Console.WriteLine(item.ToString());

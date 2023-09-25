@@ -1,8 +1,10 @@
+using BasicConnectivity.Models;
+
 namespace BasicConnectivity.Views;
 
 public class RegionView : GeneralView
 {
-    public string InsertInput()
+    public string InsertRegion()
     {
         Console.WriteLine("Insert region name");
         return Console.ReadLine();
@@ -20,5 +22,19 @@ public class RegionView : GeneralView
             Id = id,
             Name = name
         };
+    }
+    
+    public int DeleteRegion()
+    {
+        Console.WriteLine("Delete Region (Enter Region ID): ");
+        if (int.TryParse(Console.ReadLine(), out int id))
+        {
+            return id;
+        }
+        else
+        {
+            Console.WriteLine("Invalid input. Please enter a valid ID.");
+            return -1; // Mengembalikan nilai yang menunjukkan ID tidak valid.
+        }
     }
 }

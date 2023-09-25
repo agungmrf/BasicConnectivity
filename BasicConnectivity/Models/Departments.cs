@@ -1,6 +1,6 @@
 using System.Data.SqlClient;
 
-namespace BasicConnectivity
+namespace BasicConnectivity.Models
 {
     public class Departments
     {

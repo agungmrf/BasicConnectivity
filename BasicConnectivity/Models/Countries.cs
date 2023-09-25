@@ -1,12 +1,12 @@
 using System.Data.SqlClient;
 
-namespace BasicConnectivity
+namespace BasicConnectivity.Models
 {
     public class Countries
     {
         public string Id { get; set; }
         public string CountryName { get; set; }
-        public int RegionId { get; set; }
+        public int? RegionId { get; set; }
         
         public override string ToString()
         {
@@ -103,7 +103,7 @@ namespace BasicConnectivity
             }
         }
 
-        public string Insert(string id, string countryName, int regionId)
+        public string Insert(Countries countries)
         {
             using var connection = Provider.GetConnection();
             using var command = Provider.GetCommand();
@@ -113,9 +113,9 @@ namespace BasicConnectivity
 
             try
             {
-                command.Parameters.Add(new SqlParameter("@countryId", id));
-                command.Parameters.Add(new SqlParameter("@countryName", countryName));
-                command.Parameters.Add(new SqlParameter("@regionId", regionId));
+                command.Parameters.Add(new SqlParameter("@id", countries.Id));
+                command.Parameters.Add(new SqlParameter("@countryName", countries.CountryName));
+                command.Parameters.Add(new SqlParameter("@regionId", countries.RegionId));
 
                 connection.Open();
                 using var transaction = connection.BeginTransaction();

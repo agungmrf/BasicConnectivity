@@ -1,4 +1,6 @@
 ﻿using BasicConnectivity.Controllers;
+using BasicConnectivity.Models;
+using BasicConnectivity.ViewModels;
 using BasicConnectivity.Views;
 
 namespace BasicConnectivity
@@ -12,7 +14,7 @@ namespace BasicConnectivity
             {
                 Console.WriteLine("HR Database System:");
                 Console.WriteLine("1. Region CRUD");
-                Console.WriteLine("2. View Countries");
+                Console.WriteLine("2. Countries CRUD");
                 Console.WriteLine("3. View Locations");
                 Console.WriteLine("4. View Jobs");
                 Console.WriteLine("5. View Employees");
@@ -35,39 +37,36 @@ namespace BasicConnectivity
                     RegionMenu();
                     break;
                 case "2":
-                    // Menampilkan daftar Countries.
-                    var country = new Countries();
-                    var countries = country.GetAll();
-                    //GeneralView.List(countries, "countries");
+                    CountriesMenu();
                     break;
                 case "3":
                     // Menampilkan daftar Locations.
                     var location = new Locations();
-                    var locations = location.GetAll();
+                    location.GetAll();
                     //GeneralView.List(locations, "locations");
                     break;
                 case "4":
                     // Menampilkan daftar Jobs.
                     var jobs = new Jobs();
-                    var allJobs = jobs.GetAll();
+                    jobs.GetAll();
                     //GeneralView.List(allJobs, "jobs");
                     break;
                 case "5":
                     // Menampilkan daftar Employees.
                     var employees = new Employees();
-                    var allEmployees = employees.GetAll();
+                    employees.GetAll();
                     //GeneralView.List(allEmployees, "employees");
                     break;
                 case "6":
                     // Menampilkan daftar Histories.
                     var histories = new Histories();
-                    var allHistories = histories.GetAll();
+                    histories.GetAll();
                     //GeneralView.List(allHistories, "histories");
                     break;
                 case "7":
                     // Menampilkan daftar Departments.
                     var departments = new Departments();
-                    var allDepartments = departments.GetAll();
+                    departments.GetAll();
                     //GeneralView.List(allDepartments, "departments");
                     break;
                 case "8":
@@ -181,6 +180,50 @@ namespace BasicConnectivity
                         break;
                     case "3":
                         regionController.Update();
+                        break;
+                    case "4":
+                        regionController.Delete();
+                        break;
+                    case "10":
+                        isLoop = false;
+                        break;
+                    default:
+                        Console.WriteLine("Invalid choice");
+                        break;
+                }
+            }
+        }
+        
+        public static void CountriesMenu()
+        {
+            var countries2 = new Countries();
+            var countriesView = new CountriesView();
+
+            var countriesController = new CountriesController(countriesView, countries2);
+
+            var isLoop = true;
+            while (isLoop)
+            {
+                Console.WriteLine("1. List all countries");
+                Console.WriteLine("2. Insert new countries");
+                Console.WriteLine("3. Update countries");
+                Console.WriteLine("4. Delete countries");
+                Console.WriteLine("10. Back");
+                Console.Write("Enter your choice: ");
+                var input1 = Console.ReadLine();
+                switch (input1)
+                {
+                    case "1":
+                        countriesController.GetAll();
+                        break;
+                    case "2":
+                        countriesController.Insert();
+                        break;
+                    case "3":
+                        countriesController.Update();
+                        break;
+                    case "4":
+                        countriesController.Delete();
                         break;
                     case "10":
                         isLoop = false;

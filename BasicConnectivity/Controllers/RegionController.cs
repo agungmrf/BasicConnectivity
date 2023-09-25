@@ -1,10 +1,11 @@
+using BasicConnectivity.Models;
 using BasicConnectivity.Views;
 
 namespace BasicConnectivity.Controllers;
 
 public class RegionController
 {
-    // Variabel untuk menyimpan instance Region dan GeneralView yang akan diinjeksi.
+    // Variable untuk menyimpan instance Region dan GeneralView yang akan diinjeksi.
     private Region _region;
     private RegionView _regionView;
 
@@ -39,7 +40,7 @@ public class RegionController
         {
             try
             {
-                input = _regionView.InsertInput();
+                input = _regionView.InsertRegion();
                 if (string.IsNullOrEmpty(input))
                 {
                     Console.WriteLine("Region name cannot be empty");
@@ -85,5 +86,16 @@ public class RegionController
         
         var result = _region.Update(region.Id, region.Name);
         _regionView.Transaction(result);
+    }
+    
+    public void Delete()
+    {
+        int idToDelete = _regionView.DeleteRegion();
+            
+        if (idToDelete != -1)
+        {
+            var result = _region.Delete(idToDelete);
+            _regionView.Transaction(result);
+        }
     }
 }
